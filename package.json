@@ -1,0 +1,24 @@
+{
+  "name": "micro-fontend-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bootstrap": "run-s install:*",
+    "install:base": "cd base && pnpm install",
+    "install:site-app1": "cd sites/app1 && pnpm install",
+    "install:site-app2": "cd sites/app2 && pnpm install",
+    "dev": "run-p dev-base dev-site:*",
+    "dev-base": "cd base && pnpm run dev",
+    "dev-site:app1": "cd sites/app1 && pnpm run dev",
+    "dev-site:app2": "cd sites/app2 && pnpm run dev"
+  },
+  "keywords": [],
+  "author": "zhouxin",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "fs": "0.0.1-security",
+    "npm-run-all": "^4.1.5"
+  }
+}
