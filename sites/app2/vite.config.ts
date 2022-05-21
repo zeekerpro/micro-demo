@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import type { ConfigEnv, UserConfig } from "vite";
 import vue from '@vitejs/plugin-vue'
 import { join } from 'path'
 import { writeFileSync } from 'fs'
@@ -28,15 +29,24 @@ function microPlugin () {
   }
 }
 
-
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    microPlugin() as any
-  ],
-  server: {
-    port: 3002,
-  },
-  base: '/sites/app2/',
+export default defineConfig( ({command, mode}: ConfigEnv) :UserConfig => {
+
+  const isBuild = command === 'build';
+
+  const port = 3002;
+
+  const base = isBuild ? `http://localhost:${port}` : "/sites/app2";
+
+  return {
+    root: process.cwd(),
+    base,
+    plugins: [
+      vue(),
+      microPlugin() as any
+    ],
+    server: {
+      port,
+    }
+  }
 })

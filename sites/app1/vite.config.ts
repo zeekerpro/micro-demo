@@ -29,13 +29,23 @@ function microPlugin () {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    microPlugin() as any
-  ],
-  server: {
-    port: 3001,
-  },
-  base: '/sites/app1/',
+export default defineConfig( ({command, mode}) =>  {
+
+  const isBuild = command === 'build';
+
+  const port = 3001;
+
+  const base = isBuild ? `http://localhost:${port}` : "/sites/app1";
+
+  return {
+    root: process.cwd(),
+    base,
+    plugins: [
+      vue(),
+      microPlugin() as any
+    ],
+    server: {
+      port,
+    },
+  }
 })
