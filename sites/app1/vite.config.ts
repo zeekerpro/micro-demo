@@ -33,7 +33,7 @@ export default defineConfig( ({command, mode}) =>  {
 
   const isBuild = command === 'build';
 
-  const port = 3001;
+  const port = 3101;
 
   const base = isBuild ? `http://localhost:${port}` : "/sites/app1";
 

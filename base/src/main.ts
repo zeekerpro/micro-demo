@@ -10,9 +10,8 @@ microApp.start({
           loader(code){
             if (process.env.NODE_ENV === 'development') {
               // 这里 /basename/ 需要和子应用vite.config.js中base的配置保持一致
-              console.log("app1: ", code)
               code = code.replace(/(from|import)(\s*['"])(\/sites\/app1\/)/g, all => {
-                return all.replace('/sites/app1/', 'http://localhost:3001/')
+                return all.replace('/sites/app1/', 'http://localhost:3101/')
               })
             }
             return code;
@@ -25,7 +24,7 @@ microApp.start({
             if (process.env.NODE_ENV === 'development') {
               // 这里 /basename/ 需要和子应用vite.config.js中base的配置保持一致
               code = code.replace(/(from|import)(\s*['"])(\/sites\/app2\/)/g, all => {
-                return all.replace('/sites/app2/', 'http://localhost:3002/')
+                return all.replace('/sites/app2/', 'http://localhost:3102/')
               })
             }
             return code;
@@ -36,4 +35,4 @@ microApp.start({
   }
 });
 
-createApp(App).mount('#app')
+createApp(App).mount('#micro-app')

@@ -34,7 +34,7 @@ export default defineConfig( ({command, mode}: ConfigEnv) :UserConfig => {
 
   const isBuild = command === 'build';
 
-  const port = 3002;
+  const port = 3102;
 
   const base = isBuild ? `http://localhost:${port}` : "/sites/app2";
 

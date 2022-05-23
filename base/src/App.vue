@@ -5,13 +5,14 @@
 
     <sub-app
       name="app1"
-      url="http://localhost:3001/"
+      url="http://localhost:3101/"
     />
 
     <sub-app
       name="app2"
-      url="http://localhost:3002/"
+      url="http://localhost:3102/"
     />
+
 
   </div>
 </template>
