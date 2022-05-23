@@ -36,7 +36,7 @@ export default defineConfig( ({command, mode}: ConfigEnv) :UserConfig => {
 
   const port = 3102;
 
-  const base = isBuild ? `http://localhost:${port}` : "/sites/app2";
+  const base = isBuild ? `http://localhost:${port}` : "/sites/app2/";
 
   return {
     root: process.cwd(),

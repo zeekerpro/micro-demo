@@ -35,7 +35,7 @@ export default defineConfig( ({command, mode}) =>  {
 
   const port = 3101;
 
-  const base = isBuild ? `http://localhost:${port}` : "/sites/app1";
+  const base = isBuild ? `http://localhost:${port}` : "/sites/app1/";
 
   return {
     root: process.cwd(),

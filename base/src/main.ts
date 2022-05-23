@@ -1,38 +1,5 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import microApp from "@micro-zoe/micro-app";
+import { createMainboardApp } from "./createMainboardApp";
 
-microApp.start({
-  plugins: {
-    modules: {
-      'app1': [
-        {
-          loader(code){
-            if (process.env.NODE_ENV === 'development') {
-              // 这里 /basename/ 需要和子应用vite.config.js中base的配置保持一致
-              code = code.replace(/(from|import)(\s*['"])(\/sites\/app1\/)/g, all => {
-                return all.replace('/sites/app1/', 'http://localhost:3101/')
-              })
-            }
-            return code;
-          }
-        }
-      ],
-      'app2': [
-        {
-          loader(code){
-            if (process.env.NODE_ENV === 'development') {
-              // 这里 /basename/ 需要和子应用vite.config.js中base的配置保持一致
-              code = code.replace(/(from|import)(\s*['"])(\/sites\/app2\/)/g, all => {
-                return all.replace('/sites/app2/', 'http://localhost:3102/')
-              })
-            }
-            return code;
-          }
-        }
-      ]
-    }
-  }
-});
-
-createApp(App).mount('#micro-app')
+createMainboardApp().then(async (mainboardApp) => {
+  mainboardApp.app.mount('#micro-app');
+})
