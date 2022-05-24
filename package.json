@@ -1,36 +1,77 @@
 {
-  "name": "micro-fontend-demo",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "bootstrap": "run-s install:*",
-    "install:base": "cd base && pnpm install",
-    "install:site-app1": "cd sites/app1 && pnpm install",
-    "install:site-app2": "cd sites/app2 && pnpm install",
-    "dev": "run-p dev-base dev-site:* dev:json-server",
-    "dev:json-server": "json-server --read-only --port 4000  --delay 200 --watch ./json-server/db.json",
-    "dev-base": "cd base && pnpm run dev",
-    "dev-site:app1": "cd sites/app1 && pnpm run dev",
-    "dev-site:app2": "cd sites/app2 && pnpm run dev",
-    "build": "run-p build-base build-site:*",
-    "build-base": "cd base && pnpm run build",
-    "build-site:app1": "cd sites/app1 && pnpm run build",
-    "build-site:app2": "cd sites/app2 && pnpm run build",
-    "nginx:config": "nginx -t -c `pwd`/nginx/nginx.conf",
-    "nginx:start": "nginx -c `pwd`/nginx/nginx.conf",
-    "nginx:reload": "nginx -s reload -c `pwd`/nginx/nginx.conf",
-    "nginx:stop": "nginx -s stop"
-  },
-  "keywords": [],
-  "author": "zhouxin",
-  "license": "ISC",
-  "devDependencies": {
-    "@commitlint/cli": "^17.0.0",
-    "@commitlint/config-conventional": "^17.0.0",
-    "cross-env": "^7.0.3",
-    "fs": "0.0.1-security",
-    "husky": "^8.0.1",
-    "npm-run-all": "^4.1.5"
-  }
+	"name": "micro-fontend-demo",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"bootstrap": "run-s install:*",
+		"install:base": "cd base && pnpm install",
+		"install:site-app1": "cd sites/app1 && pnpm install",
+		"install:site-app2": "cd sites/app2 && pnpm install",
+		"dev": "run-p dev-base dev-site:* dev:json-server",
+		"dev:json-server": "json-server --read-only --port 4000  --delay 200 --watch ./json-server/db.json",
+		"dev-base": "cd base && pnpm run dev",
+		"dev-site:app1": "cd sites/app1 && pnpm run dev",
+		"dev-site:app2": "cd sites/app2 && pnpm run dev",
+		"build": "run-p build-base build-site:*",
+		"build-base": "cd base && pnpm run build",
+		"build-site:app1": "cd sites/app1 && pnpm run build",
+		"build-site:app2": "cd sites/app2 && pnpm run build",
+		"nginx:config": "nginx -t -c `pwd`/nginx/nginx.conf",
+		"nginx:start": "nginx -c `pwd`/nginx/nginx.conf",
+		"nginx:reload": "nginx -s reload -c `pwd`/nginx/nginx.conf",
+		"nginx:stop": "nginx -s stop",
+		"prepare": "husky install",
+		"lint:lint-staged": "lint-staged"
+	},
+	"keywords": [],
+	"author": "zhouxin",
+	"license": "ISC",
+	"lint-staged": {
+		"*.{ts,tsx,js,jsx}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"{!(package)*.json,*.code-snippets,.!(browserslist)*rc}": [
+			"prettier --write--parser json"
+		],
+		"package.json": [
+			"prettier --write"
+		],
+		"*.vue": [
+			"eslint --fix",
+			"prettier --write",
+			"stylelint --fix"
+		],
+		"*.{css,scss,less,styl,html}": [
+			"stylelint --fix",
+			"prettier --write"
+		],
+		"*.md": [
+			"eslint --fix",
+			"prettier --write"
+		]
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^17.0.0",
+		"@commitlint/config-conventional": "^17.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.25.0",
+		"@typescript-eslint/parser": "^5.25.0",
+		"cross-env": "^7.0.3",
+		"eslint": "^8.15.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-md": "^1.0.19",
+		"eslint-plugin-prettier-vue": "^3.1.0",
+		"eslint-plugin-vue": "^8.7.1",
+		"eslint-plugin-vuejs-accessibility": "^1.1.1",
+		"fs": "0.0.1-security",
+		"husky": "^8.0.1",
+		"lint-staged": "^12.4.1",
+		"npm-run-all": "^4.1.5",
+		"stylelint-config-prettier": "^9.0.3",
+		"stylelint-config-recommended-vue": "^1.4.0",
+		"stylelint-config-standard": "^25.0.0",
+		"stylelint-prettier": "^2.0.0",
+		"stylelint-scss": "^4.2.0"
+	}
 }
