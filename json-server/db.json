@@ -2,15 +2,24 @@
   "apps": [
     {
       "id": 1,
-      "name": "app1",
-      "url": "http://localhost:3101",
-      "base": "/sites/app1/"
+      "name": "sidebarApp",
+      "url": "http://localhost:3111",
+      "base": "/sites/sidebarApp/",
+			"type": "sidebar"
     },
     {
       "id": 2,
+      "name": "app1",
+      "url": "http://localhost:3101",
+      "base": "/sites/app1/",
+			"type": "business"
+    },
+    {
+      "id": 3,
       "name": "app2",
       "url": "http://localhost:3102",
-      "base": "/sites/app2/"
+      "base": "/sites/app2/",
+			"type": "business"
     }
   ]
 }
