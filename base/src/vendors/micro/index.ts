@@ -24,7 +24,6 @@ const generateConfig = async () => {
 			if (process.env.NODE_ENV === 'development') {
 				// 这里 /basename/ 需要和子应用vite.config.js中base的配置保持一致
 				let basename = app.base;
-				console.log(basename)
 				const reg = new RegExp(`(from|import)(\\s*['"])(${basename})`, 'g');
 				code = code.replace(
 					reg,
@@ -39,7 +38,6 @@ const generateConfig = async () => {
 			return code;
 		};
 		Reflect.set(modules, app.name, [ { loader } ]);
-		console.log(modules)
 	})
 
 	const microConfigs = {

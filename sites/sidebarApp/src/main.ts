@@ -5,12 +5,41 @@ import routes from './router'
 
 declare global {
   interface Window {
-    eventCenterForAppNameVite: any
+    eventCenterForSidebarApp: any
     __MICRO_APP_NAME__: string
     __MICRO_APP_ENVIRONMENT__: string
     __MICRO_APP_BASE_APPLICATION__: string
   }
 }
+
+
+// 与基座进行数据交互
+function handleMicroData (router: Router) {
+  // eventCenterForAppNameVite 是基座添加到window的数据通信对象
+  if (window.eventCenterForSidebarApp) {
+    // 主动获取基座下发的数据
+    console.log('sidebarApp getData:', window.eventCenterForSidebarApp.getData())
+
+    // 监听基座下发的数据变化
+    window.eventCenterForSidebarApp.addDataListener((data: Record<string, unknown>) => {
+      console.log('child-vite addDataListener:', data)
+			debugger
+      if (data.path && typeof data.path === 'string') {
+        data.path = data.path.replace(/^#/, '')
+        // 当基座下发path时进行跳转
+        if (data.path && data.path !== router.currentRoute.value.path) {
+          router.push(data.path as string)
+        }
+      }
+    })
+
+    // 向基座发送数据
+    setTimeout(() => {
+      window.eventCenterForSidebarApp.dispatch({ myname: 'child-vite' })
+    }, 3000)
+  }
+}
+
 
  function fixBugForVueRouter4 (router: Router) {
   // 判断主应用是main-vue3或main-vite，因为这这两个主应用是 vue-router4
@@ -47,6 +76,8 @@ function mount () {
 
   console.log('mount micro sidebarApp ')
 
+	handleMicroData(router);
+
   fixBugForVueRouter4(router)
 }
 
@@ -55,7 +86,7 @@ function unmount () {
   app?.unmount()
   history?.destroy()
   // 卸载所有数据监听函数
-  window.eventCenterForAppNameVite?.clearDataListener()
+  window.eventCenterForSidebarApp?.clearDataListener()
   app = null
   router = null
   history = null
