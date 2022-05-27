@@ -6,17 +6,15 @@
 				v-if="sidebarApp"
 				:name="sidebarApp?.name"
 				:url="sidebarApp?.url"
-				v-model:data="sidebarAppData"
+				:data="sidebarAppData"
 			/>
 			<button @click="changeSidebarAppData">
 				改个数据
 			</button>
 		</div>
 
-		<router-view id="business-apps-container" />
-
 		<template v-for="app in businessApps" :key="app.id">
-			<sub-app :name="app.name" :url="app.url" />
+			<sub-app :name="app.name" :url="app.url" :data="{}" />
 		</template>
 	</div>
 </template>
@@ -43,12 +41,12 @@
 
 	const businessApps = computed(() => apps.value.filter((app) => app.type === "business"))
 
-	let sidebarAppData = {
+	let sidebarAppData = reactive({
 		msg: "基座给sidebar带了个话"
-	}
+	})
 
 	function changeSidebarAppData(){
-		sidebarAppData = { msg: "gelege"}
+		sidebarAppData.msg += "wocaole"
 	}
 
 	onMounted(() => {

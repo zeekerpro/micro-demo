@@ -12,31 +12,40 @@ declare global {
   }
 }
 
-
 // 与基座进行数据交互
 function handleMicroData (router: Router) {
-  // eventCenterForAppNameVite 是基座添加到window的数据通信对象
+
+	// 数据监听器
+	const dataListener = (data: Record<string, unknown>) => {
+		console.log('sidebarApp addDataListener:', data)
+		if (data.path && typeof data.path === 'string') {
+			data.path = data.path.replace(/^#/, '')
+			// 当基座下发path时进行跳转
+			if (data.path && data.path !== router.currentRoute.value.path) {
+				router.push(data.path as string)
+			}
+		}
+	}
+
+  // eventCenterForSidebarApp 是基座添加到window的数据通信对象
   if (window.eventCenterForSidebarApp) {
     // 主动获取基座下发的数据
-    console.log('sidebarApp getData:', window.eventCenterForSidebarApp.getData())
+    // console.log('sidebarApp getData:', window.eventCenterForSidebarApp.getData())
 
-    // 监听基座下发的数据变化
-    window.eventCenterForSidebarApp.addDataListener((data: Record<string, unknown>) => {
-      console.log('child-vite addDataListener:', data)
-			debugger
-      if (data.path && typeof data.path === 'string') {
-        data.path = data.path.replace(/^#/, '')
-        // 当基座下发path时进行跳转
-        if (data.path && data.path !== router.currentRoute.value.path) {
-          router.push(data.path as string)
-        }
-      }
-    })
+    /* 监听基座下发的数据变化
+		* 因为子应用是异步渲染的，而基座发送数据是同步的，
+		* 如果在子应用渲染结束前基座应用发送数据，则在绑定监听函数前数据已经发送，在初始化后不会触发绑定函数，
+		* 但这个数据会放入缓存中，此时可以设置autoTrigger为true主动触发一次监听函数来获取数据。
+		*/
+    window.eventCenterForSidebarApp.addDataListener(dataListener, true)
 
-    // 向基座发送数据
+    // TODO: 向基座发送数据
     setTimeout(() => {
-      window.eventCenterForSidebarApp.dispatch({ myname: 'child-vite' })
+      window.eventCenterForSidebarApp.dispatch(
+				{ myname: 'sidebarApp' }
+			)
     }, 3000)
+
   }
 }
 

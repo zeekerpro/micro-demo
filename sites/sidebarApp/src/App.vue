@@ -9,6 +9,6 @@
 import { ref } from "vue";
 
 // @ts-ignore
-const data = window.eventCenterForSidebarApp.getData();
+const data = ref(window.eventCenterForSidebarApp.getData());
 
 </script>

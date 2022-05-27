@@ -7,14 +7,15 @@
       inline
 			disableSandbox
     />
+		{{ props.data }}
   </div>
 </template>
 
 <script lang="ts" setup>
-	import { ref, onMounted } from "vue";
-	import type { PropType  } from "vue";
+	import { ref, unref, toRaw, onMounted, watch, watchEffect, nextTick } from "vue";
 	import { EventCenterForMicroApp } from "@micro-zoe/micro-app";
 	import { camelCase, upperFirst  } from "lodash-es";
+	import microApp from "@micro-zoe/micro-app";
 
 	const props = defineProps({
 		name: {
@@ -27,16 +28,14 @@
 		},
 		data: {
 			type: Object,
-			required: false
+			required: false,
 		}
 	})
-
-	const emit = defineEmits(["update:data"])
 
 	function createEventCenter(){
 		if(!props.name){ return }
 		const eventName = `eventCenterFor${upperFirst(camelCase(props.name))}`
-		console.log(eventName)
+		console.log(`注册${eventName}成功`)
 		Reflect.set(
 			window,
 			eventName,
@@ -44,12 +43,20 @@
 		)
 	}
 
-	function changeData(){
-		emit("update:data", {msg: "改了一下，哈哈哈"});
-	}
-
 	onMounted(() => {
 		createEventCenter();
 	})
+
+	watch(
+		() => props.data,
+		async (newValue) => {
+			// 发送数据给子应用 ${ props.name }，setData第二个参数只接受对象类型
+			await nextTick();
+			microApp.setData(props.name, Object.assign({}, newValue));
+		},
+		{
+			deep: true
+		}
+	)
 
 </script>
