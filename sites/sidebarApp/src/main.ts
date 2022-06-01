@@ -2,22 +2,33 @@ import { createApp, App as AppInstance } from 'vue'
 import { createRouter, createWebHashHistory, RouterHistory, Router } from 'vue-router'
 import App from './App.vue'
 import routes from './router'
+import store from "./store";
+import { useAppsStoreRefs } from "@/store/modules/apps";
+import { AppModelType } from './models';
 
-declare global {
-  interface Window {
-    eventCenterForSidebarApp: any
-    __MICRO_APP_NAME__: string
-    __MICRO_APP_ENVIRONMENT__: string
-    __MICRO_APP_BASE_APPLICATION__: string
-  }
+// is ready ，report to mainboard app
+function sendReports(){
+  window.eventCenterForSidebarApp.dispatch(
+    { 
+      myname: 'sidebarApp',
+      status: 'ready'
+    }
+  )
 }
 
 // 与基座进行数据交互
 function handleMicroData (router: Router) {
-
 	// 数据监听器
 	const dataListener = (data: Record<string, unknown>) => {
-		console.log('sidebarApp addDataListener:', data)
+
+		console.log('recive data from mainboard:', data)
+
+		// 将基座发来的子app信息数据数据存到pinia中
+    const { apps } = useAppsStoreRefs();
+
+    // @ts-ignore
+    apps.value = data as AppModelType[];
+
 		if (data.path && typeof data.path === 'string') {
 			data.path = data.path.replace(/^#/, '')
 			// 当基座下发path时进行跳转
@@ -29,9 +40,6 @@ function handleMicroData (router: Router) {
 
   // eventCenterForSidebarApp 是基座添加到window的数据通信对象
   if (window.eventCenterForSidebarApp) {
-    // 主动获取基座下发的数据
-    // console.log('sidebarApp getData:', window.eventCenterForSidebarApp.getData())
-
     /* 监听基座下发的数据变化
 		* 因为子应用是异步渲染的，而基座发送数据是同步的，
 		* 如果在子应用渲染结束前基座应用发送数据，则在绑定监听函数前数据已经发送，在初始化后不会触发绑定函数，
@@ -39,34 +47,27 @@ function handleMicroData (router: Router) {
 		*/
     window.eventCenterForSidebarApp.addDataListener(dataListener, true)
 
-    // TODO: 向基座发送数据
-    setTimeout(() => {
-      window.eventCenterForSidebarApp.dispatch(
-				{ myname: 'sidebarApp' }
-			)
-    }, 3000)
-
+    // 向基座报到
+    sendReports();
   }
 }
 
+function fixBugForVueRouter4 (router: Router) {
+	// 判断主应用是main-vue3或main-vite，因为这这两个主应用是 vue-router4
+	const realBaseRoute = '/sidebarApp#'
 
- function fixBugForVueRouter4 (router: Router) {
-  // 判断主应用是main-vue3或main-vite，因为这这两个主应用是 vue-router4
-    const realBaseRoute = '/sidebarApp#'
+	router.beforeEach(() => {
+		if (typeof window.history.state?.current === 'string') {
+			window.history.state.current = window.history.state.current.replace(new RegExp(realBaseRoute, 'g'), '')
+		}
+	})
 
-     router.beforeEach(() => {
-       if (typeof window.history.state?.current === 'string') {
-         window.history.state.current = window.history.state.current.replace(new RegExp(realBaseRoute, 'g'), '')
-       }
-     })
-
-     router.afterEach(() => {
-       if (typeof window.history.state === 'object') {
-         window.history.state.current = realBaseRoute +  (window.history.state.current || '')
-       }
-     })
- }
-
+	router.afterEach(() => {
+		if (typeof window.history.state === 'object') {
+			window.history.state.current = realBaseRoute +  (window.history.state.current || '')
+		}
+	})
+}
 
 let app: AppInstance | null = null
 let router: Router | null = null
@@ -80,7 +81,11 @@ function mount () {
   })
 
   app = createApp(App)
+
   app.use(router)
+
+  app.use(store)
+
   app.mount('#sidebarApp')
 
   console.log('mount micro sidebarApp ')

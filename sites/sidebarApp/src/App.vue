@@ -1,14 +1,26 @@
 <template>
 	<div>
 	this is sidebar page
-	{{ data }}
+
+    <template
+      v-for="app in apps"
+      :key="app.id"
+    >
+      <div>
+        <button>
+          app1
+        </button>
+      </div>
+    </template>
+
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, type Ref } from "vue";
+import { useAppsStoreRefs } from "@/store/modules/apps";
+import { AppModelType } from "./models";
 
-// @ts-ignore
-const data = ref(window.eventCenterForSidebarApp.getData());
+const { apps } = useAppsStoreRefs();
 
 </script>

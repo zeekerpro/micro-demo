@@ -1,7 +1,11 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { join } from 'path'
+import { join, resolve } from 'path'
 import { writeFileSync } from 'fs'
+
+function pathResolve(dir: string){
+  return resolve(process.cwd(), '.', dir)
+}
 
 function microPlugin () {
   let basePath = ''
@@ -40,6 +44,14 @@ export default defineConfig( ({command, mode}) =>  {
   return {
     root: process.cwd(),
     base,
+    resolve: {
+      alias: [
+        {
+          find: '@',
+          replacement: pathResolve('src') + '/'
+        },
+      ]
+    },
     plugins: [
       vue(),
       microPlugin() as any

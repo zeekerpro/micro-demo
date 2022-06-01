@@ -1,11 +1,5 @@
 import microApp from '@micro-zoe/micro-app'
-
-interface AppModelType {
-	id: number
-	name: string
-	url: string
-	base: string
-}
+import { AppModelType  } from "@/models";
 
 const generateConfig = async () => {
 	const ret = await fetch('http://localhost:4000/apps', {
